@@ -1513,9 +1513,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49ce591701cfa0247a40a09e56588cf6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnInterval: 5
-  initialDelay: 10
-  spawnDistance: 80
+  spawnInterval: 3
+  initialDelay: 2
+  spawnDistance: 40
   obstacleSpeed: 15
   obstacleSize: {x: 1.5, y: 1.5, z: 1.5}
   laneDistance: 3

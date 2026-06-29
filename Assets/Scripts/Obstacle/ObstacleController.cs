@@ -45,7 +45,7 @@ namespace InfiniteRunner.Obstacle
 
                 if (GameManager.Instance != null)
                 {
-                    GameManager.Instance.StopGame();
+                    GameManager.Instance.RestartGame();
                 }
             }
         }

@@ -97,9 +97,9 @@ namespace InfiniteRunner.EditorTools
             ObstacleSpawner obstacleSpawner = obstacleSpawnerGo.AddComponent<ObstacleSpawner>();
 
             SerializedObject obstacleSerialized = new SerializedObject(obstacleSpawner);
-            obstacleSerialized.FindProperty("spawnInterval").floatValue = 5.0f;
-            obstacleSerialized.FindProperty("initialDelay").floatValue = 10.0f;
-            obstacleSerialized.FindProperty("spawnDistance").floatValue = 80.0f;
+            obstacleSerialized.FindProperty("spawnInterval").floatValue = 3.0f;
+            obstacleSerialized.FindProperty("initialDelay").floatValue = 2.0f;
+            obstacleSerialized.FindProperty("spawnDistance").floatValue = 40.0f;
             obstacleSerialized.FindProperty("obstacleSpeed").floatValue = 15.0f;
             obstacleSerialized.FindProperty("laneDistance").floatValue = 3.0f;
             obstacleSerialized.ApplyModifiedProperties();
