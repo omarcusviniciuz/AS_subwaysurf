@@ -40,8 +40,11 @@ namespace InfiniteRunner.Obstacle
         [SerializeField] private float obstacleSpeed = 15.0f;
 
         [Header("Obstacle Appearance")]
-        [Tooltip("Tamanho do cubo de obstáculo (para ambos os tipos).")]
+        [Tooltip("Tamanho do cubo de obstáculo Ground e Wall (largura x altura x profundidade).")]
         [SerializeField] private Vector3 obstacleSize = new Vector3(1.5f, 1.5f, 1.5f);
+
+        [Tooltip("Tamanho do obstáculo Tall. Altura maior para ser visualmente imponente enquanto o vão embaixo ainda permite rolamento.")]
+        [SerializeField] private Vector3 tallObstacleSize = new Vector3(1.5f, 2.0f, 1.5f);
 
         [Header("Tall Obstacle Settings")]
         [Tooltip("Altura do vão livre embaixo do obstáculo suspenso (em metros). " +
@@ -73,6 +76,16 @@ namespace InfiniteRunner.Obstacle
         [Range(0f, 1f)]
         [SerializeField] private float doubleLaneChance = 0.5f;
 
+        [Header("Texture Assets")]
+        [Tooltip("Material com textura para o obstáculo terrestre (Construction Barricad). Se nulo, usa cor sólida preta.")]
+        [SerializeField] private Material groundMaterialAsset;
+
+        [Tooltip("Material com textura para o obstáculo suspenso (Construction Barrier). Se nulo, usa cor sólida vermelha.")]
+        [SerializeField] private Material tallMaterialAsset;
+
+        [Tooltip("Material com textura para a parede (Red Cage Stand). Se nulo, usa cor sólida branca.")]
+        [SerializeField] private Material wallMaterialAsset;
+
         private float spawnTimer;
         private float delayTimer;
         private bool delayElapsed;
@@ -91,19 +104,19 @@ namespace InfiniteRunner.Obstacle
         {
             ResetTimers();
 
-            // Material preto para o obstáculo terrestre
+            // Fallback: material preto para o obstáculo terrestre (se não houver asset assignado)
             groundObstacleMaterial = new Material(Shader.Find("Standard"));
             groundObstacleMaterial.color = Color.black;
             if (groundObstacleMaterial.HasProperty("_Glossiness")) groundObstacleMaterial.SetFloat("_Glossiness", 0.0f);
             if (groundObstacleMaterial.HasProperty("_Metallic"))   groundObstacleMaterial.SetFloat("_Metallic",   0.0f);
 
-            // Material vermelho-escuro para o obstáculo suspenso (diferenciação visual)
+            // Fallback: material vermelho-escuro para o obstáculo suspenso
             tallObstacleMaterial = new Material(Shader.Find("Standard"));
-            tallObstacleMaterial.color = new Color(0.6f, 0.05f, 0.05f); // Vermelho escuro
+            tallObstacleMaterial.color = new Color(0.6f, 0.05f, 0.05f);
             if (tallObstacleMaterial.HasProperty("_Glossiness")) tallObstacleMaterial.SetFloat("_Glossiness", 0.1f);
             if (tallObstacleMaterial.HasProperty("_Metallic"))   tallObstacleMaterial.SetFloat("_Metallic",   0.0f);
 
-            // Material branco para a parede (diferenciação visual)
+            // Fallback: material branco para a parede
             wallObstacleMaterial = new Material(Shader.Find("Standard"));
             wallObstacleMaterial.color = Color.white;
             if (wallObstacleMaterial.HasProperty("_Glossiness")) wallObstacleMaterial.SetFloat("_Glossiness", 0.2f);
@@ -269,7 +282,7 @@ namespace InfiniteRunner.Obstacle
         }
 
         /// <summary>
-        /// Cria um cubo preto no chão (obstáculo terrestre clássico).
+        /// Cria um cubo no chão com textura de barricada de construção.
         /// O jogador precisa pular ou trocar de faixa para desviar.
         /// </summary>
         private void SpawnGroundObstacle(float xPos)
@@ -278,18 +291,22 @@ namespace InfiniteRunner.Obstacle
             float yPos = obstacleSize.y / 2f;
             Vector3 spawnPos = new Vector3(xPos, yPos, spawnDistance);
 
+            // Usa asset de textura se disponível, senão usa fallback de cor sólida
+            Material mat = (groundMaterialAsset != null) ? groundMaterialAsset : groundObstacleMaterial;
+
             GameObject obstacle = CreateObstacleCube(
                 "Obstacle_Ground",
                 spawnPos,
                 obstacleSize,
-                groundObstacleMaterial
+                mat
             );
 
             spawnedObstacles.Add(obstacle);
         }
 
         /// <summary>
-        /// Cria um cubo vermelho suspenso com vão livre embaixo.
+        /// Cria um obstáculo suspenso com textura de barrier de construção e vão livre embaixo.
+        /// Altura aumentada (tallObstacleSize.y) para maior impacto visual.
         /// O vão (tallGapHeight) é MENOR que a altura do jogador em pé (1.8 m)
         /// mas MAIOR que a altura do jogador ao rolar (0.9 m), forçando o uso
         /// de rolamento ou troca de faixa para passar.
@@ -297,21 +314,24 @@ namespace InfiniteRunner.Obstacle
         private void SpawnTallObstacle(float xPos)
         {
             // Y = vão + metade da altura do cubo → a face inferior fica exatamente em tallGapHeight
-            float yPos = tallGapHeight + obstacleSize.y / 2f;
+            float yPos = tallGapHeight + tallObstacleSize.y / 2f;
             Vector3 spawnPos = new Vector3(xPos, yPos, spawnDistance);
+
+            // Usa asset de textura se disponível, senão usa fallback de cor sólida
+            Material mat = (tallMaterialAsset != null) ? tallMaterialAsset : tallObstacleMaterial;
 
             GameObject obstacle = CreateObstacleCube(
                 "Obstacle_Tall",
                 spawnPos,
-                obstacleSize,
-                tallObstacleMaterial
+                tallObstacleSize,
+                mat
             );
 
             spawnedObstacles.Add(obstacle);
         }
 
         /// <summary>
-        /// Cria uma parede branca alta que bloqueia tanto o pulo quanto o rolamento.
+        /// Cria uma parede com textura de gaiola/grade que bloqueia tanto o pulo quanto o rolamento.
         /// A única forma de desviar é trocar de faixa.
         ///
         /// Cálculo de altura mínima para bloquear o pulo:
@@ -327,11 +347,14 @@ namespace InfiniteRunner.Obstacle
             float yPos = wallHeight / 2f;
             Vector3 spawnPos = new Vector3(xPos, yPos, spawnDistance);
 
+            // Usa asset de textura se disponível, senão usa fallback de cor sólida
+            Material mat = (wallMaterialAsset != null) ? wallMaterialAsset : wallObstacleMaterial;
+
             GameObject obstacle = CreateObstacleCube(
                 "Obstacle_Wall",
                 spawnPos,
                 wallSize,
-                wallObstacleMaterial
+                mat
             );
 
             spawnedObstacles.Add(obstacle);
