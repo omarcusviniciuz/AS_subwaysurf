@@ -1358,11 +1358,17 @@ MonoBehaviour:
   spawnDistance: 40
   obstacleSpeed: 15
   obstacleSize: {x: 1.5, y: 1.5, z: 1.5}
+  tallObstacleSize: {x: 1.5, y: 2, z: 1.5}
   tallGapHeight: 1
   tallObstacleChance: 0.35
   wallHeight: 5
   wallObstacleChance: 0.25
   laneDistance: 3
+  doubleLaneSpeedThreshold: 22.5
+  doubleLaneChance: 0.5
+  groundMaterialAsset: {fileID: 2100000, guid: b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7, type: 2}
+  tallMaterialAsset: {fileID: 2100000, guid: c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8, type: 2}
+  wallMaterialAsset: {fileID: 2100000, guid: a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6, type: 2}
 --- !u!4 &1625511628
 Transform:
   m_ObjectHideFlags: 0

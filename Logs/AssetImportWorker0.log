@@ -298,3 +298,13 @@ Memory consumption went from 61.2 MB to 61.1 MB.
 Total: 3.864600 ms (FindLiveObjects: 0.083100 ms CreateObjectMapping: 0.025100 ms MarkObjects: 3.633300 ms  DeleteObjects: 0.122300 ms)
 
 Prepare: number of updated asset objects reloaded= 0
+========================================================================
+Received Prepare
+Refreshing native plugins compatible for Editor in 0.00 ms, found 0 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 430 unused Assets / (50.4 KB). Loaded Objects now: 978.
+Memory consumption went from 61.4 MB to 61.3 MB.
+Total: 6.208000 ms (FindLiveObjects: 0.085600 ms CreateObjectMapping: 0.019400 ms MarkObjects: 5.907600 ms  DeleteObjects: 0.194300 ms)
+
+Prepare: number of updated asset objects reloaded= 0
